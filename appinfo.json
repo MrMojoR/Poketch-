@@ -1,2 +1,19 @@
 {
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "metakirby5@gmail.com",
+    "longName": "Pok\u00e9tch+",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "Pok\u00e9tch+",
+    "uuid": "003eec80-ab22-4cab-b44b-263f524e3a63",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
 }
