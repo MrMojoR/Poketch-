@@ -1,16 +1,12 @@
 #include <pebble.h>
   
-#define INTERVAL_UPDATE MINUTE_UNIT
+#define TICK_UNIT       MINUTE_UNIT
  
 #define HR_DAY          6
-#define COLOR_FG_DAY    GColorBlack
-#define COLOR_BG_DAY    GColorWhite
-#define COMP_OP_DAY     GCompOpAssign
-  
 #define HR_NIGHT        18
-#define COLOR_FG_NIGHT  GColorWhite
-#define COLOR_BG_NIGHT  GColorBlack
-#define COMP_OP_NIGHT   GCompOpAssignInverted
+#define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
+#define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
+#define COMP_OP(day)    (day ? GCompOpAssign : GCompOpAssignInverted)
   
 #define FMT_24H         "%H:%M"
 #define FMT_12H         "%I:%M"
@@ -37,12 +33,36 @@ static GBitmap *s_pika;
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
-  // Time
+  // For events that occur less frequently than tick interval
+  static bool firstUpdate = true;
+  
+  // === Time ===
   static char time_buf[FMT_TIME_LEN];
   strftime(time_buf, FMT_TIME_LEN, clock_is_24h_style() ? FMT_24H : FMT_12H, tick_time);
   
   text_layer_set_text(s_time_layer, time_buf);
   layer_mark_dirty(text_layer_get_layer(s_time_layer));
+  
+  // === Day/night composting ===
+  static bool day = true;
+  static bool nextDay = true;
+  static bool changed = true;
+  
+  // Did we go day->night or night->day
+  changed = day ^ (nextDay = (tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT));
+  day = nextDay;
+  
+  if (firstUpdate || changed) {
+    bitmap_layer_set_compositing_mode(s_pika_layer, COMP_OP(day));
+//     bitmap_layer_set_compositing_mode(s_bluetooth_layer, COMP_OP(day));
+//     bitmap_layer_set_compositing_mode(s_battery_layer, COMP_OP(day));
+    text_layer_set_text_color(s_time_layer, COLOR_FG(day));
+//     text_layer_set_text_color(s_date_layer, COLOR_FG(day));
+    window_set_background_color(s_main_window, COLOR_BG(day));
+    layer_mark_dirty(s_root_layer);
+  }
+  
+  firstUpdate = false;
 }
   
 static void main_window_load(Window *window) {
@@ -65,14 +85,11 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
   
-  // TODO: Day/night colors?
-  text_layer_set_text_color(s_time_layer, GColorBlack);
-  
   // === Initial update ===
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
   
-  tick_handler(tick_time, INTERVAL_UPDATE);
+  tick_handler(tick_time, TICK_UNIT);
 }
 
 static void main_window_unload(Window *window) {
@@ -89,7 +106,7 @@ static void main_window_unload(Window *window) {
 static void init() {
   
   // Register services
-  tick_timer_service_subscribe(INTERVAL_UPDATE, tick_handler);
+  tick_timer_service_subscribe(TICK_UNIT, tick_handler);
 //   bluetooth_connection_service_subscribe(bt_handler);
 //   battery_state_service_subscribe(batt_handler);
   
