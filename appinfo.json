@@ -7,13 +7,31 @@
     "longName": "Pok\u00e9tch+",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "images/icon.png",
+                "menuIcon": true,
+                "name": "ICON",
+                "type": "png"
+            },
+            {
+                "characterRegex": "[0-9:]",
+                "file": "fonts/HMPoketchDigital.ttf",
+                "name": "FONT_POKETCH_DIGITAL_70",
+                "type": "font"
+            },
+            {
+                "file": "images/Pikachu (bottom).png",
+                "name": "IMAGE_PIKA_BG",
+                "type": "png"
+            }
+        ]
     },
     "shortName": "Pok\u00e9tch+",
     "uuid": "003eec80-ab22-4cab-b44b-263f524e3a63",
     "versionCode": 1,
     "versionLabel": "1.0",
     "watchapp": {
-        "watchface": false
+        "watchface": true
     }
 }
