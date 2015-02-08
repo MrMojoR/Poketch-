@@ -17,9 +17,9 @@
   
 #define RECT_TIME       GRect(5, 40, 139, 70)
 #define RECT_PIKA       GRect(0, 122, 144, 48)
-#define RECT_BANG       GRect(76, 133, 4, 16)
-#define RECT_BAT(pct)   GRect(60, 160, (pct / 5) * 4, 8)
-#define RECT_CHG        GRect(142, 160, 2, 8)
+#define RECT_BANG       GRect(18, 128, 4, 16)
+#define RECT_BAT(pct)   GRect(60, 160, (pct / 5) * 4, 2)
+#define RECT_CHG        GRect(26, 140, 48, 16)
 
 static Window *s_main_window;
 static Layer *s_root_layer;
@@ -83,10 +83,8 @@ static void bt_handler(bool connected) {
 
 static void bat_handler(BatteryChargeState charge) {
   
-  // TODO: Thunderbolt icon charge to make more obvious
-  
-  // Set charge bit
-  layer_set_hidden(bitmap_layer_get_layer(s_chg_layer), !(charge.is_plugged && charge.charge_percent == 100));
+  // Set charge indicator
+  layer_set_hidden(bitmap_layer_get_layer(s_chg_layer), !charge.is_plugged);
   
   // Set battery bar
   layer_set_frame(bitmap_layer_get_layer(s_bat_layer), RECT_BAT(charge.charge_percent));
