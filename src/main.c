@@ -46,40 +46,9 @@ static GBitmap *s_pika;
 
 static bool firstUpdate;
 
-// === Animation ===
-
-// From https://ninedof.wordpress.com/2013/12/29/pebble-sdk-2-0-tutorial-4-animations-and-timers/
-void on_animation_stopped(Animation *anim, bool finished, void *context) {
-  
-  // Free the memory used by the Animation
-  property_animation_destroy((PropertyAnimation*) anim);
-}
- 
-void animate_layer(Layer *layer, GRect *start, GRect *finish, int duration, int delay) {
-  
-  // Declare animation
-  PropertyAnimation *anim = property_animation_create_layer_frame(layer, start, finish);
- 
-  // Set characteristics
-  animation_set_duration((Animation*) anim, duration);
-  animation_set_delay((Animation*) anim, delay);
- 
-  // Set stopped handler to free memory
-  AnimationHandlers handlers = {
-    // The reference to the stopped handler is the only one in the array
-    .stopped = (AnimationStoppedHandler) on_animation_stopped
-  };
-  animation_set_handlers((Animation*) anim, handlers, NULL);
- 
-  // Start animation!
-  animation_schedule((Animation*) anim);
-}
-
 // === Handlers ===
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  
-  // TODO: slide-in date
   
   // === Time ===
   static char time_buf[FMT_TIME_LEN];
@@ -132,6 +101,8 @@ static void bat_handler(BatteryChargeState charge) {
   // Set battery bar
   layer_set_bounds(bitmap_layer_get_layer(s_bat_layer), BOUND_BAT(charge.charge_percent));
 }
+
+// === Setup ===
   
 static void main_window_load(Window *window) {
 	
