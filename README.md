@@ -2,6 +2,9 @@
 
 Pokétch+ is a fork of Pokétch Digital - a Pebble watchface designed to emulate the digital watchface used on the Pokétch watch in Pokémon Diamond/Pearl/Platinum.
 
-##Planned Features:
+##Added Features:
 - Color inversion for day/night
-- Date/Battery/Bluetooth slide down from top on shake
+- Date
+- Battery bar on lower left
+- Pikachu charging image when watch is charging
+- "!" to left of Pikachu when bluetooth disconnected
