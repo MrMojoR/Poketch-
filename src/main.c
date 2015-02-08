@@ -18,7 +18,8 @@
 #define RECT_TIME       GRect(5, 40, 139, 70)
 #define RECT_PIKA       GRect(0, 122, 144, 48)
 #define RECT_BANG       GRect(18, 128, 4, 16)
-#define RECT_BAT(pct)   GRect(60, 160, (pct / 5) * 4, 2)
+#define RECT_BAT        GRect(60, 160, 80, 2)
+#define BOUND_BAT(pct)  GRect(0, 0, (pct / 5) * 4, 2)
 #define RECT_CHG        GRect(26, 140, 48, 16)
 
 static Window *s_main_window;
@@ -87,7 +88,7 @@ static void bat_handler(BatteryChargeState charge) {
   layer_set_hidden(bitmap_layer_get_layer(s_chg_layer), !charge.is_plugged);
   
   // Set battery bar
-  layer_set_frame(bitmap_layer_get_layer(s_bat_layer), RECT_BAT(charge.charge_percent));
+  layer_set_bounds(bitmap_layer_get_layer(s_bat_layer), BOUND_BAT(charge.charge_percent));
 }
   
 static void main_window_load(Window *window) {
@@ -116,7 +117,7 @@ static void main_window_load(Window *window) {
                              bitmap_layer_get_layer(s_pika_layer));
   
   // Battery
-  s_bat_layer = bitmap_layer_create(RECT_BAT(100));
+  s_bat_layer = bitmap_layer_create(RECT_BAT);
   s_bat = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BAT);
   bitmap_layer_set_bitmap(s_bat_layer, s_bat);
   layer_set_clips(bitmap_layer_get_layer(s_bat_layer), true); // enable clipping
