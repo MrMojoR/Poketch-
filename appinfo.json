@@ -36,6 +36,12 @@
                 "type": "font"
             },
             {
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/HMPoketchDigital.ttf",
+                "name": "FONT_POKETCH_DIGITAL_30",
+                "type": "font"
+            },
+            {
                 "file": "images/Pikachu (bottom).png",
                 "name": "IMAGE_PIKA_BG",
                 "type": "png"

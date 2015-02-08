@@ -12,10 +12,11 @@
 #define FMT_12H         "%I:%M"
 #define FMT_TIME_LEN    sizeof("00:00")
   
-#define FMT_DATE        "%a %m %d"
-#define FMT_DATE_LEN    sizeof("XXX 00 00")
+#define FMT_DATE        "%m %d"
+#define FMT_DATE_LEN    sizeof("00 00")
   
 #define RECT_TIME       GRect(5, 40, 139, 70)
+#define RECT_DATE       GRect(76, 124, 68, 30)
 #define RECT_PIKA       GRect(0, 122, 144, 48)
 #define RECT_BANG       GRect(18, 128, 4, 16)
 #define RECT_BAT        GRect(60, 160, 80, 2)
@@ -27,6 +28,9 @@ static Layer *s_root_layer;
 
 static TextLayer *s_time_layer;
 static GFont s_time_font;
+
+static TextLayer *s_date_layer;
+static GFont s_date_font;
 
 static BitmapLayer *s_bang_layer;
 static GBitmap *s_bang;
@@ -42,6 +46,37 @@ static GBitmap *s_pika;
 
 static bool firstUpdate;
 
+// === Animation ===
+
+// From https://ninedof.wordpress.com/2013/12/29/pebble-sdk-2-0-tutorial-4-animations-and-timers/
+void on_animation_stopped(Animation *anim, bool finished, void *context) {
+  
+  // Free the memory used by the Animation
+  property_animation_destroy((PropertyAnimation*) anim);
+}
+ 
+void animate_layer(Layer *layer, GRect *start, GRect *finish, int duration, int delay) {
+  
+  // Declare animation
+  PropertyAnimation *anim = property_animation_create_layer_frame(layer, start, finish);
+ 
+  // Set characteristics
+  animation_set_duration((Animation*) anim, duration);
+  animation_set_delay((Animation*) anim, delay);
+ 
+  // Set stopped handler to free memory
+  AnimationHandlers handlers = {
+    // The reference to the stopped handler is the only one in the array
+    .stopped = (AnimationStoppedHandler) on_animation_stopped
+  };
+  animation_set_handlers((Animation*) anim, handlers, NULL);
+ 
+  // Start animation!
+  animation_schedule((Animation*) anim);
+}
+
+// === Handlers ===
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   // TODO: slide-in date
@@ -52,6 +87,13 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   text_layer_set_text(s_time_layer, time_buf);
   layer_mark_dirty(text_layer_get_layer(s_time_layer));
+  
+  // == Date ==
+  static char date_buf[FMT_DATE_LEN];
+  strftime(date_buf, FMT_DATE_LEN, FMT_DATE, tick_time);
+  
+  text_layer_set_text(s_date_layer, date_buf);
+  layer_mark_dirty(text_layer_get_layer(s_date_layer));
   
   // === Day/night composting ===
   static bool day = true;
@@ -68,7 +110,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
     bitmap_layer_set_compositing_mode(s_bat_layer, COMP_OP(day));
     bitmap_layer_set_compositing_mode(s_chg_layer, COMP_OP(day));
     text_layer_set_text_color(s_time_layer, COLOR_FG(day));
-//     text_layer_set_text_color(s_date_layer, COLOR_FG(day));
+    text_layer_set_text_color(s_date_layer, COLOR_FG(day));
     window_set_background_color(s_main_window, COLOR_BG(day));
     layer_mark_dirty(s_root_layer);
   }
@@ -108,6 +150,14 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
+  
+  // Date
+  s_date_layer = text_layer_create(RECT_DATE);
+  s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_POKETCH_DIGITAL_30));
+  text_layer_set_font(s_date_layer, s_date_font);
+  text_layer_set_background_color(s_date_layer, GColorClear);
+  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
+  layer_add_child(s_root_layer, text_layer_get_layer(s_date_layer));
   
   // Bluetooth
   s_bang_layer = bitmap_layer_create(RECT_BANG);
@@ -154,6 +204,10 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
   fonts_unload_custom_font(s_time_font);
   
+  // Time
+  text_layer_destroy(s_date_layer);
+  fonts_unload_custom_font(s_date_font);
+
   // Bluetooth
   bitmap_layer_destroy(s_bang_layer);
   gbitmap_destroy(s_bang);
@@ -188,6 +242,7 @@ static void deinit() {
 
   window_destroy(s_main_window);
   
+  // Unregister services
   tick_timer_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
   battery_state_service_unsubscribe();
