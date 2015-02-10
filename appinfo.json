@@ -9,31 +9,9 @@
     "resources": {
         "media": [
             {
-                "file": "images/chg_on.png",
-                "name": "IMAGE_CHG",
+                "file": "images/Pikachu (bottom).png",
+                "name": "IMAGE_PIKA_BG",
                 "type": "png"
-            },
-            {
-                "file": "images/bang.png",
-                "name": "IMAGE_BANG",
-                "type": "png"
-            },
-            {
-                "file": "images/bat.png",
-                "name": "IMAGE_BAT",
-                "type": "png"
-            },
-            {
-                "file": "images/icon.png",
-                "menuIcon": true,
-                "name": "ICON",
-                "type": "png"
-            },
-            {
-                "characterRegex": "[0-9:]",
-                "file": "fonts/HMPoketchDigital.ttf",
-                "name": "FONT_POKETCH_DIGITAL_70",
-                "type": "font"
             },
             {
                 "characterRegex": "[0-9: ]",
@@ -42,8 +20,30 @@
                 "type": "font"
             },
             {
-                "file": "images/Pikachu (bottom).png",
-                "name": "IMAGE_PIKA_BG",
+                "characterRegex": "[0-9:]",
+                "file": "fonts/HMPoketchDigital.ttf",
+                "name": "FONT_POKETCH_DIGITAL_70",
+                "type": "font"
+            },
+            {
+                "file": "images/icon.png",
+                "menuIcon": true,
+                "name": "ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/bat.png",
+                "name": "IMAGE_BAT",
+                "type": "png"
+            },
+            {
+                "file": "images/bang.png",
+                "name": "IMAGE_BANG",
+                "type": "png"
+            },
+            {
+                "file": "images/chg_on.png",
+                "name": "IMAGE_CHG",
                 "type": "png"
             }
         ]
