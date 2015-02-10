@@ -1,6 +1,7 @@
 #include <pebble.h>
   
-#define TICK_UNIT       SECOND_UNIT
+// All time changes
+#define TICK_UNIT       SECOND_UNIT | MINUTE_UNIT | HOUR_UNIT | DAY_UNIT
  
 #define HR_DAY          6
 #define HR_NIGHT        18
@@ -88,7 +89,7 @@ static void show_seconds(void *data) {
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   // === Time ===
-  if (firstUpdate || units_changed & MINUTE_UNIT) {
+  if (units_changed & MINUTE_UNIT) {
     static char time_buf[FMT_TIME_LEN];
     strftime(time_buf, FMT_TIME_LEN, FMT_TIME(clock_is_24h_style()), tick_time);
 
@@ -104,12 +105,12 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   static bool nextDay = true;
   static bool changed = true;
   
-  if (firstUpdate || units_changed & HOUR_UNIT) {
+  if (units_changed & HOUR_UNIT) {
     // Did we go day->night or night->day
-    changed = day ^ (nextDay = (tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT));
+    changed = firstUpdate || (day ^ (nextDay = (tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT)));
     day = nextDay;
     
-    if (firstUpdate || changed) {
+    if (changed) {
       bitmap_layer_set_compositing_mode(s_pika_layer, COMP_OP(day));
       bitmap_layer_set_compositing_mode(s_bang_layer, COMP_OP(day));
       bitmap_layer_set_compositing_mode(s_bat_layer, COMP_OP(day));
