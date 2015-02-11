@@ -109,7 +109,8 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   if (units_changed & HOUR_UNIT) {
     // Did we go day->night or night->day
-    changed = (day ^ (nextDay = (tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT))) || firstUpdate;
+    nextDay = tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT;
+    changed = firstUpdate || (day ^ nextDay);
     day = nextDay;
     
     if (changed) {
