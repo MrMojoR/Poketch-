@@ -148,8 +148,8 @@ static void acc_handler(AccelAxisType axis, int32_t direction) {
 static void bt_handler(bool connected) {
   
   // Vibrate
-  if (!firstUpdate && !connected)
-    vibes_double_pulse();
+  if (!firstUpdate)
+    connected ? vibes_short_pulse() : vibes_double_pulse();
   
   // Set BT indicator
   layer_set_hidden(bitmap_layer_get_layer(s_bang_layer), connected);
