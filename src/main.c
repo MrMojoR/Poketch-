@@ -9,7 +9,7 @@
 #define HR_NIGHT        18
 #define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
 #define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
-#define COMP_OP(day)    (day ? GCompOpAnd : GCompOpSet)
+#define COMP_OP(day)    (day ? GCompOpAssign : GCompOpAssignInverted)
   
 #define FMT_TIME(mil)   (mil ? "%H:%M" : "%I:%M")
 #define FMT_TIME_LEN    sizeof("00:00")
