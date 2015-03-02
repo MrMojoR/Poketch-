@@ -3,7 +3,7 @@
 #include <pebble.h>
   
 // All time changes
-#define TICK_UNIT       SECOND_UNIT | MINUTE_UNIT | HOUR_UNIT | DAY_UNIT
+#define TICK_UNIT       MINUTE_UNIT | HOUR_UNIT | DAY_UNIT
  
 #define HR_DAY          6
 #define HR_NIGHT        18
