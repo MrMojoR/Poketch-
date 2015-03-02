@@ -55,7 +55,7 @@ static GBitmap *s_pika;
 // === Helper variables ===
 
 static bool firstUpdate = true;
-static bool showDate = false;
+static bool showDate = true;
 
 // === Helper methods ===
 
@@ -259,7 +259,7 @@ static void init() {
   
   // Register services
   tick_timer_service_subscribe(TICK_UNIT, tick_handler);
-  accel_tap_service_subscribe(acc_handler);
+//   accel_tap_service_subscribe(acc_handler);
   bluetooth_connection_service_subscribe(bt_handler);
   battery_state_service_subscribe(bat_handler);
   
@@ -279,7 +279,7 @@ static void deinit() {
   
   // Unregister services
   tick_timer_service_unsubscribe();
-  accel_tap_service_unsubscribe();
+//   accel_tap_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
   battery_state_service_unsubscribe();
 }
