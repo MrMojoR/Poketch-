@@ -79,6 +79,54 @@ void replace_gbitmap_color(GColor color_to_replace, GColor replace_with_color, G
 
 }
 
+void replace_gbitmap_colors(GColor colors_to_replace[], GColor replace_with_colors[], int num_colors, GBitmap *im, BitmapLayer *bml){
+
+	//First determine what the number of colors in the palette
+	int num_palette_items = get_num_palette_colors(im);
+
+	#ifdef SHOW_APP_LOGS
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette has %d items", num_palette_items);
+	#endif
+
+	//Get the gbitmap's current palette
+	GColor *current_palette = gbitmap_get_palette(im);
+
+	//Iterate through the palette finding the color we want to replace and replacing 
+	//it with the new color
+	#ifdef SHOW_APP_LOGS
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Replace Color Start--");
+	#endif 
+
+	for(int i = 0; i < num_palette_items; i++){
+
+		#ifdef SHOW_APP_LOGS
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette[%d] = %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
+		#endif
+    
+    // should use a hashtable... but I'm lazy
+    for (int j = 0; j < num_colors; j++) {
+      if ((colors_to_replace[j].argb & 0x3F)==(current_palette[i].argb & 0x3F)){
+
+        current_palette[i].argb = (current_palette[i].argb & 0xC0)| (replace_with_colors[j].argb & 0x3F);
+        #ifdef SHOW_APP_LOGS
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "-------[%d] replaced with %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
+        #endif
+
+      }
+    }
+	}
+
+	#ifdef SHOW_APP_LOGS
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Replace Color End--");
+	#endif
+
+	//Mark the bitmaplayer dirty
+	if(bml != NULL){
+		layer_mark_dirty(bitmap_layer_get_layer(bml));
+	}
+
+}
+
 void gbitmap_fill_all_except(GColor color_to_not_change, GColor fill_color, bool fill_gcolorclear, GBitmap *im, BitmapLayer *bml){
 
 	//First determine what the number of colors in the palette

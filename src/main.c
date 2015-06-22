@@ -11,6 +11,7 @@
 
 // Colors
 #ifdef PBL_COLOR
+  #define PALETTE_SIZE    2
   #define COLOR_FG(day)   (day ? GColorDarkGreen : GColorScreaminGreen)
   #define COLOR_BG(day)   (day ? GColorScreaminGreen : GColorDarkGreen)
 #else
@@ -70,13 +71,24 @@ static bool showDate = true;
 static void colorize(BitmapLayer *layer, bool day) {
   
   #ifdef PBL_COLOR
+    // The colors we're replacing
+    
+    GColor colors_to_replace[PALETTE_SIZE],
+           replace_with_colors[PALETTE_SIZE];
+
+    if (firstUpdate) {
+      colors_to_replace[0] = GColorBlack;
+      colors_to_replace[1] = GColorWhite;
+    } else {
+      colors_to_replace[0] = COLOR_FG(!day);
+      colors_to_replace[1] = COLOR_BG(!day);
+    }
+
+    replace_with_colors[0] = COLOR_FG(day);
+    replace_with_colors[1] = COLOR_BG(day);
+
     GBitmap *bitmap = (GBitmap *) bitmap_layer_get_bitmap(layer);
-    // Are we updating from b/w or from color?
-    bool bw = gbitmap_color_palette_contains_color(GColorWhite, bitmap) || gbitmap_color_palette_contains_color(GColorBlack, bitmap);
-    // Replace foreground
-    replace_gbitmap_color(bw ? GColorBlack : COLOR_FG(!day), COLOR_FG(day), bitmap, layer);
-    // Replace background
-    replace_gbitmap_color(bw ? GColorWhite : COLOR_FG(!day), COLOR_BG(day), bitmap, layer);
+    replace_gbitmap_colors(colors_to_replace, replace_with_colors, PALETTE_SIZE, bitmap, layer);
   #else
     bitmap_layer_set_compositing_mode(layer, day ? GCompOpAssign : GCompOpAssignInverted);
   #endif
