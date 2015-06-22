@@ -4,7 +4,7 @@
 #include "gbitmap_color_palette_manipulator.h"
   
 // All time changes
-#define TICK_UNIT       MINUTE_UNIT | HOUR_UNIT | DAY_UNIT
+#define TICK_UNIT       (MINUTE_UNIT | HOUR_UNIT | DAY_UNIT)
  
 #define HR_DAY          6
 #define HR_NIGHT        18
@@ -38,6 +38,7 @@
 #define RECT_CHG        GRect(26, 140, 48, 16)
 
 // === Layers ===
+
 static Window *s_main_window;
 static Layer *s_root_layer;
 
@@ -67,12 +68,15 @@ static bool showDate = true;
 // === Helper methods ===
 
 static void colorize(BitmapLayer *layer, bool day) {
+  
   #ifdef PBL_COLOR
     GBitmap *bitmap = (GBitmap *) bitmap_layer_get_bitmap(layer);
+    // Are we updating from b/w or from color?
+    bool bw = gbitmap_color_palette_contains_color(GColorWhite, bitmap) || gbitmap_color_palette_contains_color(GColorBlack, bitmap);
     // Replace foreground
-    replace_gbitmap_color(GColorBlack, COLOR_FG(day), bitmap, layer);
+    replace_gbitmap_color(bw ? GColorBlack : COLOR_FG(!day), COLOR_FG(day), bitmap, layer);
     // Replace background
-    replace_gbitmap_color(GColorWhite, COLOR_BG(day), bitmap, layer);
+    replace_gbitmap_color(bw ? GColorWhite : COLOR_FG(!day), COLOR_BG(day), bitmap, layer);
   #else
     bitmap_layer_set_compositing_mode(layer, day ? GCompOpAssign : GCompOpAssignInverted);
   #endif
