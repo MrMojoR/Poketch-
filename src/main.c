@@ -1,15 +1,22 @@
 // metakirby5
 
 #include <pebble.h>
+#include "gbitmap_color_palette_manipulator.h"
   
 // All time changes
 #define TICK_UNIT       MINUTE_UNIT | HOUR_UNIT | DAY_UNIT
  
 #define HR_DAY          6
 #define HR_NIGHT        18
-#define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
-#define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
-#define COMP_OP(day)    (day ? GCompOpAssign : GCompOpAssignInverted)
+
+// Colors
+#ifdef PBL_COLOR
+  #define COLOR_FG(day)   (day ? GColorDarkGreen : GColorScreaminGreen)
+  #define COLOR_BG(day)   (day ? GColorScreaminGreen : GColorDarkGreen)
+#else
+  #define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
+  #define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
+#endif
   
 #define FMT_TIME(mil)   (mil ? "%H:%M" : "%I:%M")
 #define FMT_TIME_LEN    sizeof("00:00")
@@ -58,6 +65,18 @@ static bool firstUpdate = true;
 static bool showDate = true;
 
 // === Helper methods ===
+
+static void colorize(BitmapLayer *layer, bool day) {
+  #ifdef PBL_COLOR
+    GBitmap *bitmap = (GBitmap *) bitmap_layer_get_bitmap(layer);
+    // Replace foreground
+    replace_gbitmap_color(GColorBlack, COLOR_FG(day), bitmap, layer);
+    // Replace background
+    replace_gbitmap_color(GColorWhite, COLOR_BG(day), bitmap, layer);
+  #else
+    bitmap_layer_set_compositing_mode(layer, day ? GCompOpAssign : GCompOpAssignInverted);
+  #endif
+}
 
 static void update_secdate(struct tm *tick_time) {
   
@@ -114,10 +133,10 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
     day = nextDay;
     
     if (changed) {
-      bitmap_layer_set_compositing_mode(s_pika_layer, COMP_OP(day));
-      bitmap_layer_set_compositing_mode(s_bang_layer, COMP_OP(day));
-      bitmap_layer_set_compositing_mode(s_bat_layer, COMP_OP(day));
-      bitmap_layer_set_compositing_mode(s_chg_layer, COMP_OP(day));
+      colorize(s_pika_layer, day);
+      colorize(s_bang_layer, day);
+      colorize(s_bat_layer, day);
+      colorize(s_chg_layer, day);
       text_layer_set_text_color(s_time_layer, COLOR_FG(day));
       text_layer_set_text_color(s_secdate_layer, COLOR_FG(day));
       window_set_background_color(s_main_window, COLOR_BG(day));

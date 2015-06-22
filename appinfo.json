@@ -48,11 +48,14 @@
             }
         ]
     },
-    "sdkVersion": "2",
+    "sdkVersion": "3",
     "shortName": "Pok\u00e9tch+",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
     "uuid": "003eec80-ab22-4cab-b44b-263f524e3a63",
-    "versionCode": 1,
-    "versionLabel": "1.14",
+    "versionLabel": "2.00",
     "watchapp": {
         "watchface": true
     }
