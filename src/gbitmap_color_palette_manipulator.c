@@ -103,7 +103,7 @@ void replace_gbitmap_colors(GColor colors_to_replace[], GColor replace_with_colo
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette[%d] = %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
 		#endif
     
-    // should use a hashtable... but I'm lazy
+    // Should use a hashtable... but I'm lazy
     for (int j = 0; j < num_colors; j++) {
       if ((colors_to_replace[j].argb & 0x3F)==(current_palette[i].argb & 0x3F)){
 
@@ -111,7 +111,9 @@ void replace_gbitmap_colors(GColor colors_to_replace[], GColor replace_with_colo
         #ifdef SHOW_APP_LOGS
         APP_LOG(APP_LOG_LEVEL_DEBUG, "-------[%d] replaced with %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
         #endif
-
+        
+        // Don't replace more than once
+        break;
       }
     }
 	}

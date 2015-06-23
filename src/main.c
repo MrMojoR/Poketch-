@@ -137,7 +137,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   // == Secs/date ==
   update_secdate(tick_time);
   
-  // === Day/night composting ===
+  // === Day/night color inversion ===
   static bool day = true;
   static bool nextDay = true;
   static bool changed = true;
