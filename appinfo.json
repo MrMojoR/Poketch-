@@ -7,46 +7,7 @@
     "longName": "Pok\u00e9tch+",
     "projectType": "native",
     "resources": {
-        "media": [
-            {
-                "file": "images/chg_on.png",
-                "name": "IMAGE_CHG",
-                "type": "png"
-            },
-            {
-                "file": "images/bang.png",
-                "name": "IMAGE_BANG",
-                "type": "png"
-            },
-            {
-                "file": "images/bat.png",
-                "name": "IMAGE_BAT",
-                "type": "png"
-            },
-            {
-                "file": "images/icon.png",
-                "menuIcon": true,
-                "name": "ICON",
-                "type": "png"
-            },
-            {
-                "characterRegex": "[0-9:]",
-                "file": "fonts/HMPoketchDigital.ttf",
-                "name": "FONT_POKETCH_DIGITAL_70",
-                "type": "font"
-            },
-            {
-                "characterRegex": "[0-9: ]",
-                "file": "fonts/HMPoketchDigital.ttf",
-                "name": "FONT_POKETCH_DIGITAL_30",
-                "type": "font"
-            },
-            {
-                "file": "images/Pikachu (bottom).png",
-                "name": "IMAGE_PIKA_BG",
-                "type": "png"
-            }
-        ]
+        "media": []
     },
     "sdkVersion": "3",
     "shortName": "Pok\u00e9tch+",
@@ -55,7 +16,7 @@
         "basalt",
         "chalk"
     ],
-    "uuid": "2c523440-439b-4510-8691-a3b1e7f5b69e",
+    "uuid": "25a77a52-4ddd-4b52-b183-baa61a88d3ea",
     "versionLabel": "3.0",
     "watchapp": {
         "watchface": true
