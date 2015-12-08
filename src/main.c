@@ -2,10 +2,10 @@
 
 #include <pebble.h>
 #include "gbitmap_color_palette_manipulator.h"
-  
+
 // All time changes
 #define TICK_UNIT       (MINUTE_UNIT | HOUR_UNIT | DAY_UNIT)
- 
+
 #define HR_DAY          6
 #define HR_NIGHT        18
 
@@ -18,19 +18,23 @@
   #define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
   #define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
 #endif
-  
+
 #define FMT_TIME(mil)   (mil ? "%H:%M" : "%I:%M")
 #define FMT_TIME_LEN    sizeof("00:00")
-  
+
 #define FMT_DATE        "%m %d"
 #define FMT_DATE_LEN    sizeof("00 00")
-  
+
 #define FMT_SEC         "%S"
 #define FMT_SEC_LEN     sizeof("00")
-  
+
 #define TIMEOUT_SECDATE 3000
-  
-#define RECT_TIME       GRect(5, 40, 139, 70)
+
+#if defined(PBL_RECT)
+  #define RECT_TIME       GRect(5, 40, 139, 70)
+#elif defined(PBL_ROUND)
+  #define RECT_TIME       GRect(23, 40, 139, 70)
+#endif
 #define RECT_SECDATE    GRect(76, 124, 68, 30)
 #define RECT_PIKA       GRect(0, 122, 144, 48)
 #define RECT_BANG       GRect(18, 128, 4, 16)

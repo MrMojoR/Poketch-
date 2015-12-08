@@ -52,10 +52,11 @@
     "shortName": "Pok\u00e9tch+",
     "targetPlatforms": [
         "aplite",
-        "basalt"
+        "basalt",
+        "chalk"
     ],
-    "uuid": "003eec80-ab22-4cab-b44b-263f524e3a63",
-    "versionLabel": "2.01",
+    "uuid": "2c523440-439b-4510-8691-a3b1e7f5b69e",
+    "versionLabel": "3.0",
     "watchapp": {
         "watchface": true
     }
