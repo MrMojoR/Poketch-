@@ -12,11 +12,11 @@
 // Colors
 #ifdef PBL_COLOR
   #define PALETTE_SIZE    2
-  #define COLOR_FG(day)   (day ? GColorDarkGreen : GColorScreaminGreen)
-  #define COLOR_BG(day)   (day ? GColorScreaminGreen : GColorDarkGreen)
+  #define COLOR_FG(day)   ((day) ? GColorDarkGreen : GColorScreaminGreen)
+  #define COLOR_BG(day)   ((day) ? GColorScreaminGreen : GColorDarkGreen)
 #else
-  #define COLOR_FG(day)   (day ? GColorBlack : GColorWhite)
-  #define COLOR_BG(day)   (day ? GColorWhite : GColorBlack)
+  #define COLOR_FG(day)   ((day) ? GColorBlack : GColorWhite)
+  #define COLOR_BG(day)   ((day) ? GColorWhite : GColorBlack)
 #endif
 
 #define FMT_TIME(mil)   (mil ? "%H:%M" : "%I:%M")
@@ -73,10 +73,10 @@ static bool showDate = true;
 // === Helper methods ===
 
 static void colorize(BitmapLayer *layer, bool day) {
-  
+
   #ifdef PBL_COLOR
     // The colors we're replacing
-    
+
     GColor colors_to_replace[PALETTE_SIZE],
            replace_with_colors[PALETTE_SIZE];
 
@@ -99,27 +99,27 @@ static void colorize(BitmapLayer *layer, bool day) {
 }
 
 static void update_secdate(struct tm *tick_time) {
-  
+
   static char date_buf[FMT_DATE_LEN];
   static char sec_buf[FMT_SEC_LEN];
-  
+
   // Update the buffer
   if (showDate)
     strftime(date_buf, FMT_DATE_LEN, FMT_DATE, tick_time);
   else
     strftime(sec_buf, FMT_SEC_LEN, FMT_SEC, tick_time);
-  
+
   // Set the buffer
   text_layer_set_text(s_secdate_layer, showDate ? date_buf : sec_buf);
   layer_mark_dirty(text_layer_get_layer(s_secdate_layer));
 }
 
 static void show_seconds(void *data) {
-  
+
   // Get time
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
-  
+
   // Show seconds
   showDate = false;
   update_secdate(tick_time);
@@ -128,7 +128,7 @@ static void show_seconds(void *data) {
 // === Handlers ===
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  
+
   // === Time ===
   if (units_changed & MINUTE_UNIT) {
     static char time_buf[FMT_TIME_LEN];
@@ -137,21 +137,21 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
     text_layer_set_text(s_time_layer, time_buf);
     layer_mark_dirty(text_layer_get_layer(s_time_layer));
   }
-  
+
   // == Secs/date ==
   update_secdate(tick_time);
-  
+
   // === Day/night color inversion ===
   static bool day = true;
   static bool nextDay = true;
   static bool changed = true;
-  
+
   if (units_changed & HOUR_UNIT) {
     // Did we go day->night or night->day
     nextDay = tick_time->tm_hour >= HR_DAY && tick_time->tm_hour < HR_NIGHT;
     changed = firstUpdate || (day ^ nextDay);
     day = nextDay;
-    
+
     if (changed) {
       colorize(s_pika_layer, day);
       colorize(s_bang_layer, day);
@@ -166,17 +166,17 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void acc_handler(AccelAxisType axis, int32_t direction) {
-  
+
   static AppTimer *timer_secdate = NULL;
-  
+
   // Get time
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
-  
+
   // Show date
   showDate = true;
   update_secdate(tick_time);
-  
+
   // === Reschedule seconds showing ===
   // If timer exists, try rescheduling
   if (!(timer_secdate && app_timer_reschedule(timer_secdate, TIMEOUT_SECDATE)))
@@ -185,36 +185,36 @@ static void acc_handler(AccelAxisType axis, int32_t direction) {
 }
 
 static void bt_handler(bool connected) {
-  
+
   // Vibrate
   if (!firstUpdate)
     connected ? vibes_short_pulse() : vibes_double_pulse();
-  
+
   // Set BT indicator
   layer_set_hidden(bitmap_layer_get_layer(s_bang_layer), connected);
 }
 
 static void bat_handler(BatteryChargeState charge) {
-  
+
   // Set charge indicator
   layer_set_hidden(bitmap_layer_get_layer(s_chg_layer), !charge.is_plugged);
-  
+
   // Set battery bar
   layer_set_bounds(bitmap_layer_get_layer(s_bat_layer), BOUND_BAT(charge.charge_percent));
 }
 
 // === Setup ===
-  
+
 static void main_window_load(Window *window) {
-	
+
   s_root_layer = window_get_root_layer(window);
-  
+
   // Pikachu BG
   s_pika_layer = bitmap_layer_create(RECT_PIKA);
   s_pika = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PIKA_BG);
   bitmap_layer_set_bitmap(s_pika_layer, s_pika);
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_pika_layer));
-  
+
   // Time
   s_time_layer = text_layer_create(RECT_TIME);
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_POKETCH_DIGITAL_70));
@@ -222,7 +222,7 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
-  
+
   // Secs/date
   s_secdate_layer = text_layer_create(RECT_SECDATE);
   s_secdate_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_POKETCH_DIGITAL_30));
@@ -230,14 +230,14 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(s_secdate_layer, GColorClear);
   text_layer_set_text_alignment(s_secdate_layer, GTextAlignmentCenter);
   layer_add_child(s_root_layer, text_layer_get_layer(s_secdate_layer));
-  
+
   // Bluetooth
   s_bang_layer = bitmap_layer_create(RECT_BANG);
   s_bang = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BANG);
   bitmap_layer_set_bitmap(s_bang_layer, s_bang);
   layer_insert_above_sibling(bitmap_layer_get_layer(s_bang_layer),
                              bitmap_layer_get_layer(s_pika_layer));
-  
+
   // Battery
   s_bat_layer = bitmap_layer_create(RECT_BAT);
   s_bat = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BAT);
@@ -245,30 +245,30 @@ static void main_window_load(Window *window) {
   layer_set_clips(bitmap_layer_get_layer(s_bat_layer), true); // enable clipping
   layer_insert_above_sibling(bitmap_layer_get_layer(s_bat_layer),
                              bitmap_layer_get_layer(s_pika_layer));
-  
+
   // Charging
   s_chg_layer = bitmap_layer_create(RECT_CHG);
   s_chg = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHG);
   bitmap_layer_set_bitmap(s_chg_layer, s_chg);
   layer_insert_above_sibling(bitmap_layer_get_layer(s_chg_layer),
                              bitmap_layer_get_layer(s_pika_layer));
-  
+
   // === Initial update ===
-  
+
   // Get current time
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
-  
+
   // Initial handler runs
   tick_handler(tick_time, TICK_UNIT);
   bt_handler(bluetooth_connection_service_peek());
   bat_handler(battery_state_service_peek());
-  
+
   firstUpdate = false;
 }
 
 static void main_window_unload(Window *window) {
-  
+
   // Pikachu BG
   bitmap_layer_destroy(s_pika_layer);
   gbitmap_destroy(s_pika);
@@ -276,7 +276,7 @@ static void main_window_unload(Window *window) {
   // Time
   text_layer_destroy(s_time_layer);
   fonts_unload_custom_font(s_time_font);
-  
+
   // Secs/date
   text_layer_destroy(s_secdate_layer);
   fonts_unload_custom_font(s_secdate_font);
@@ -284,24 +284,24 @@ static void main_window_unload(Window *window) {
   // Bluetooth
   bitmap_layer_destroy(s_bang_layer);
   gbitmap_destroy(s_bang);
-  
+
   // Battery
   bitmap_layer_destroy(s_bat_layer);
   gbitmap_destroy(s_bat);
-  
+
   // Charging
   bitmap_layer_destroy(s_chg_layer);
   gbitmap_destroy(s_chg);
 }
 
 static void init() {
-  
+
   // Register services
   tick_timer_service_subscribe(TICK_UNIT, tick_handler);
 //   accel_tap_service_subscribe(acc_handler);
   bluetooth_connection_service_subscribe(bt_handler);
   battery_state_service_subscribe(bat_handler);
-  
+
   s_main_window = window_create();
 
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -315,7 +315,7 @@ static void init() {
 static void deinit() {
 
   window_destroy(s_main_window);
-  
+
   // Unregister services
   tick_timer_service_unsubscribe();
 //   accel_tap_service_unsubscribe();

@@ -1,8 +1,4 @@
 {
-    "appKeys": {},
-    "capabilities": [
-        ""
-    ],
     "companyName": "metakirby5@gmail.com",
     "longName": "Pok\u00e9tch+",
     "projectType": "native",
@@ -42,7 +38,7 @@
                 "type": "font"
             },
             {
-                "file": "images/Pikachu (bottom).png",
+                "file": "images/pika.png",
                 "name": "IMAGE_PIKA_BG",
                 "type": "png"
             }
@@ -50,11 +46,6 @@
     },
     "sdkVersion": "3",
     "shortName": "Pok\u00e9tch+",
-    "targetPlatforms": [
-        "aplite",
-        "basalt",
-        "chalk"
-    ],
     "uuid": "003eec80-ab22-4cab-b44b-263f524e3a63",
     "versionLabel": "3.0",
     "watchapp": {
