@@ -9,10 +9,20 @@
         ],
         "displayName": "Pok\u00e9tch+ without bluetooth",
         "enableMultiJS": false,
-        "messageKeys": [],
+        "messageKeys": [
+            "TEMPERATURE",
+            "CONDITIONS"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "characterRegex": "[0-9:A-Za-z, ]",
+                    "file": "fonts/Square.ttf",
+                    "name": "FONT_SQUARE_18",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
                 {
                     "characterRegex": "[0-9: ]",
                     "file": "fonts/Square.ttf",
@@ -21,9 +31,9 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[A-Z]",
+                    "characterRegex": "[0-9:A-Z]",
                     "file": "fonts/Square.ttf",
-                    "name": "FONT_SQUARE_27",
+                    "name": "FONT_SQUARE_22",
                     "targetPlatforms": null,
                     "type": "font"
                 },
