@@ -1,0 +1,92 @@
+{
+    "author": "metakirby5@gmail.com",
+    "dependencies": {},
+    "keywords": [],
+    "name": "pok-tch",
+    "pebble": {
+        "capabilities": [
+            "health"
+        ],
+        "displayName": "Pok\u00e9tch+ without bluetooth",
+        "enableMultiJS": false,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "characterRegex": "[0-9: ]",
+                    "file": "fonts/Square.ttf",
+                    "name": "FONT_SQUARE_70",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Z]",
+                    "file": "fonts/Square.ttf",
+                    "name": "FONT_SQUARE_27",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "images/pika.png",
+                    "name": "IMAGE_PIKA_BG",
+                    "type": "png"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "ICON",
+                    "type": "png"
+                },
+                {
+                    "file": "images/chg_on.png",
+                    "name": "IMAGE_CHG",
+                    "type": "png"
+                },
+                {
+                    "file": "images/bat.png",
+                    "name": "IMAGE_BAT",
+                    "type": "png"
+                },
+                {
+                    "file": "images/bang.png",
+                    "name": "IMAGE_BANG",
+                    "type": "png"
+                },
+                {
+                    "characterRegex": "[0-9: ]",
+                    "file": "fonts/HMPoketchDigital.ttf",
+                    "name": "FONT_POKETCH_DIGITAL_27",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[0-9: ]",
+                    "file": "fonts/HMPoketchDigital.ttf",
+                    "name": "FONT_POKETCH_DIGITAL_30",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[0-9:]",
+                    "file": "fonts/HMPoketchDigital.ttf",
+                    "name": "FONT_POKETCH_DIGITAL_70",
+                    "targetPlatforms": null,
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "diorite",
+            "emery"
+        ],
+        "uuid": "6bf9d053-912a-4147-898d-fd00a47fec2e",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "3.8.0"
+}
