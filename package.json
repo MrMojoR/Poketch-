@@ -5,6 +5,7 @@
     "name": "pok-tch",
     "pebble": {
         "capabilities": [
+            "location",
             "health"
         ],
         "displayName": "Pok\u00e9tch+ without bluetooth",
@@ -17,9 +18,16 @@
         "resources": {
             "media": [
                 {
-                    "characterRegex": "[0-9:A-Za-z, ]",
+                    "characterRegex": "[0-9:A-Za-z\u00b0. ]",
+                    "file": "fonts/weather.ttf",
+                    "name": "FONT_WEATHER_18",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[0-9:A-Z]",
                     "file": "fonts/Square.ttf",
-                    "name": "FONT_SQUARE_18",
+                    "name": "FONT_SQUARE_22",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -31,9 +39,9 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[0-9:A-Z]",
+                    "characterRegex": "[0-9:A-Za-z,. ]",
                     "file": "fonts/Square.ttf",
-                    "name": "FONT_SQUARE_22",
+                    "name": "FONT_SQUARE_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },

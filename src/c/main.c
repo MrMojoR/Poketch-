@@ -37,14 +37,14 @@
 #define TIMEOUT_SECDATE 3000
 
 #if defined(PBL_RECT)
-  #define RECT_TIME       GRect(5, 45, 139, 75)
+  #define RECT_TIME       GRect(5, 48, 139, 78)
 #elif defined(PBL_ROUND)
   #define RECT_TIME       GRect(23, 40, 139, 70)
 #endif
 #define RECT_SECDATE    GRect(76, 124, 68, 30)
-#define RECT_STEPS    	GRect(18, 27, 72,168-25)
-#define RECT_DAY   		  GRect(60, 27, 70,168-25)
-#define RECT_WEATHER    GRect(0, 0, 144,168)
+#define RECT_STEPS    	GRect(18, 31, 72,168-25)
+#define RECT_DAY   		  GRect(60, 31, 70,168-25)
+#define RECT_WEATHER    GRect(0, 8, 144,168)
 #define RECT_PIKA       GRect(0, 122, 144, 48)
 #define RECT_BANG       GRect(18, 128, 4, 16)
 #define RECT_BAT        GRect(60, 160, 80, 2)
@@ -183,6 +183,21 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_steps();
   
   layer_mark_dirty(text_layer_get_layer(s_steps_layer));
+  
+  //Update weather
+  // Get weather update every 30 minutes
+  if(tick_time->tm_min % 30 == 0) {
+  // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+  
+    // Send the message!
+    app_message_outbox_send();
+}
+
 
   // === Day/night color inversion ===
   static bool day = true;
@@ -297,10 +312,11 @@ static void main_window_load(Window *window) {
   
   // Weather
   s_weather_layer = text_layer_create(RECT_WEATHER);
-  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SQUARE_18));
+  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SQUARE_16));
   text_layer_set_font(s_weather_layer, s_weather_font);
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
+  text_layer_set_text(s_weather_layer, "loading");
   layer_add_child(s_root_layer, text_layer_get_layer(s_weather_layer));
 
   // Bluetooth
@@ -385,7 +401,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   // Store incoming information
 static char temperature_buffer[8];
 static char conditions_buffer[32];
-static char weather_layer_buffer[32];
+static char weather_layer_buffer[40];
   
    // Read tuples for data
 Tuple *temp_tuple = dict_find(iterator, MESSAGE_KEY_TEMPERATURE);
@@ -399,7 +415,19 @@ if(temp_tuple && conditions_tuple) {
 }
   
   // Assemble full string and display
-snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s, %s", temperature_buffer, conditions_buffer);
+snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s %s", temperature_buffer, conditions_buffer);
+  //snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s", "15c cloudy");
+  if (strlen(weather_layer_buffer) > 13){
+    layer_set_frame(text_layer_get_layer(s_weather_layer), GRect(0, 0, 144,168));
+    layer_set_frame(text_layer_get_layer(s_steps_layer), 	GRect(18, 34, 72,168-25));
+    layer_set_frame(text_layer_get_layer(s_day_layer), 	GRect(60, 34, 70,168-25));
+    layer_set_frame(text_layer_get_layer(s_time_layer), 	GRect(5, 51, 139, 81));
+  }else{
+    layer_set_frame(text_layer_get_layer(s_weather_layer), GRect(0, 8, 144,168));
+    layer_set_frame(text_layer_get_layer(s_steps_layer), 	GRect(18, 31, 72,168-25));
+    layer_set_frame(text_layer_get_layer(s_day_layer), 	GRect(60, 31, 70,168-25));
+    layer_set_frame(text_layer_get_layer(s_time_layer), 	GRect(5, 48, 139, 78));
+  }
 text_layer_set_text(s_weather_layer, weather_layer_buffer);
   layer_mark_dirty(text_layer_get_layer(s_weather_layer));
 

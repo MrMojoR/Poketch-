@@ -1,7 +1,3 @@
-
-
-
-
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
@@ -22,7 +18,7 @@ var xhrRequest = function (url, type, callback) {
 
 function getWeather() {
    // Construct URL
-  var url = 'http://api.openweathermap.org/data/2.5/weather?lat=46.08&lon=18.23&appid=a7973e71a5d0f3ba5d1af51e374f01bc';
+  var url = 'http://api.openweathermap.org/data/2.5/weather?id=3046526&appid=a7973e71a5d0f3ba5d1af51e374f01bc';
 
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
