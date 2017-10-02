@@ -18,7 +18,7 @@ var xhrRequest = function (url, type, callback) {
 
 function getWeather() {
    // Construct URL
-  var url = 'http://api.openweathermap.org/data/2.5/weather?id=3046526&appid=a7973e71a5d0f3ba5d1af51e374f01bc';
+  var url = 'https://api.darksky.net/forecast/9206a49f3f5b989f4d5e6bf840c39ee0/46.0642927,18.1927753?exclude=[minutely,hourly,daily,alerts,flags]&units=si';
 
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
@@ -27,11 +27,11 @@ function getWeather() {
       var json = JSON.parse(responseText);
 
       // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.main.temp - 273.15);
+      var temperature = Math.round(json.currently.temperature);
       console.log('Temperature is ' + temperature);
 
       // Conditions
-      var conditions = json.weather[0].main;      
+      var conditions = json.currently.summary;      
       console.log('Conditions are ' + conditions);
       // Assemble dictionary using our keys
 var dictionary = {
