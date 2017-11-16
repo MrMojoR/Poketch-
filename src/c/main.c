@@ -411,12 +411,12 @@ Tuple *conditions_tuple = dict_find(iterator, MESSAGE_KEY_CONDITIONS);
 // If all data is available, use it
 if(temp_tuple && conditions_tuple) {
   snprintf(temperature_buffer, sizeof(temperature_buffer), "%dC",(int)temp_tuple->value->int32);
-  snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", conditions_tuple->value->cstring);
+  snprintf(conditions_buffer, sizeof(conditions_buffer), "%s",conditions_tuple->value->cstring);
 }
   
   // Assemble full string and display
 snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s %s", temperature_buffer, conditions_buffer);
-  if (strlen(weather_layer_buffer) > 13){
+  if (strlen(weather_layer_buffer) > 15){
     layer_set_frame(text_layer_get_layer(s_weather_layer), GRect(0, 0, 144,168));
     layer_set_frame(text_layer_get_layer(s_steps_layer), 	GRect(18, 34, 72,168-25));
     layer_set_frame(text_layer_get_layer(s_day_layer), 	GRect(60, 34, 70,168-25));
