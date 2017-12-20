@@ -31,7 +31,7 @@ function getWeather() {
       var temperature = temp>0?Math.floor(temp):Math.ceil(temp);
       console.log('Temperature is ' + temperature);
       
-      var rest = Math.abs((temp*10)%10);
+      var rest = Math.round(Math.abs((temp*10)%10));
       
       console.log('REST is ' + rest);
 
