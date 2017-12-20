@@ -400,22 +400,25 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   
   // Store incoming information
 static char temperature_buffer[8];
+static char rest_buffer[8];
 static char conditions_buffer[32];
 static char weather_layer_buffer[40];
   
    // Read tuples for data
 Tuple *temp_tuple = dict_find(iterator, MESSAGE_KEY_TEMPERATURE);
 Tuple *conditions_tuple = dict_find(iterator, MESSAGE_KEY_CONDITIONS);
+Tuple *rest_tuple = dict_find(iterator, MESSAGE_KEY_REST);
   
 
 // If all data is available, use it
-if(temp_tuple && conditions_tuple) {
-  snprintf(temperature_buffer, sizeof(temperature_buffer), "%dC",(int)temp_tuple->value->int32);
+if(temp_tuple && conditions_tuple && rest_tuple) {
+  snprintf(temperature_buffer, sizeof(temperature_buffer), "%d.",(int)temp_tuple->value->int32);
+  snprintf(rest_buffer, sizeof(rest_buffer), "%dC",(int)rest_tuple->value->int32);
   snprintf(conditions_buffer, sizeof(conditions_buffer), "%s",conditions_tuple->value->cstring);
 }
   
   // Assemble full string and display
-snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s %s", temperature_buffer, conditions_buffer);
+snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s%s %s", temperature_buffer, rest_buffer, conditions_buffer);
   if (strlen(weather_layer_buffer) > 15){
     layer_set_frame(text_layer_get_layer(s_weather_layer), GRect(0, 0, 144,168));
     layer_set_frame(text_layer_get_layer(s_steps_layer), 	GRect(18, 34, 72,168-25));

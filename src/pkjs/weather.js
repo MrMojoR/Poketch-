@@ -27,8 +27,13 @@ function getWeather() {
       var json = JSON.parse(responseText);
 
       // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.currently.temperature);
+      var temp = json.currently.apparentTemperature;
+      var temperature = temp>0?Math.floor(temp):Math.ceil(temp);
       console.log('Temperature is ' + temperature);
+      
+      var rest = Math.abs((temp*10)%10);
+      
+      console.log('REST is ' + rest);
 
       // Conditions
       var conditions = json.currently.summary;      
@@ -36,6 +41,7 @@ function getWeather() {
       // Assemble dictionary using our keys
 var dictionary = {
   'TEMPERATURE': temperature,
+  'REST':rest,
   'CONDITIONS': conditions
 };
 
@@ -61,3 +67,4 @@ Pebble.addEventListener('ready',
     getWeather();
   }
 );
+
