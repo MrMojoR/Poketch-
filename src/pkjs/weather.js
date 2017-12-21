@@ -25,14 +25,17 @@ function getWeather() {
     function(responseText) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
-
-      // Temperature in Kelvin requires adjustment
+      
       var temp = json.currently.apparentTemperature;
+      
       var temperature = temp>0?Math.floor(temp):Math.ceil(temp);
       console.log('Temperature is ' + temperature);
       
       var rest = Math.round(Math.abs((temp*10)%10));
-      
+      if(rest == 10){
+        rest = 0;
+        temperature = temperature > 0 ? temperature + 1 : temperature - 1;
+      }
       console.log('REST is ' + rest);
 
       // Conditions
