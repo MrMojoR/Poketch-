@@ -419,7 +419,7 @@ if(temp_tuple && conditions_tuple && rest_tuple) {
   
   // Assemble full string and display
 snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s%s %s", temperature_buffer, rest_buffer, conditions_buffer);
-  if (strlen(weather_layer_buffer) > 15){
+  if (strlen(weather_layer_buffer) > 16){
     layer_set_frame(text_layer_get_layer(s_weather_layer), GRect(0, 0, 144,168));
     layer_set_frame(text_layer_get_layer(s_steps_layer), 	GRect(18, 34, 72,168-25));
     layer_set_frame(text_layer_get_layer(s_day_layer), 	GRect(60, 34, 70,168-25));
