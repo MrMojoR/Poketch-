@@ -2,7 +2,7 @@
 Pebble.addEventListener('appmessage',
   function(e) {
     console.log('AppMessage received!');
-    getWeather();
+    getLocation();
   }                     
 );
 
@@ -16,9 +16,33 @@ var xhrRequest = function (url, type, callback) {
 };
 
 
-function getWeather() {
+function getLocation(){
+  navigator.geolocation.getCurrentPosition(
+        this.getRealWeather.bind(this),
+        this._onLocationError.bind(this), {
+          timeout: 15000,
+          maximumAge: 60000
+      });
+}
+
+this._onLocationError = function(err) {
+    console.log('owm-weather: Location error');
+    Pebble.sendAppMessage({
+      'LocationUnavailable': 1
+    });
+  };
+
+
+
+this.getRealWeather = function(pos) {
+  
+  
    // Construct URL
-  var url = 'https://api.darksky.net/forecast/9206a49f3f5b989f4d5e6bf840c39ee0/46.0642927,18.1927753?exclude=[minutely,hourly,daily,alerts,flags]&units=si';
+  //var url = 'https://api.darksky.net/forecast/9206a49f3f5b989f4d5e6bf840c39ee0/46.0642927,18.1927753?exclude=[minutely,hourly,daily,alerts,flags]&units=si';
+  var url = 'https://api.darksky.net/forecast/9206a49f3f5b989f4d5e6bf840c39ee0/' + 
+      pos.coords.latitude + ',' + pos.coords.longitude + '?exclude=[minutely,hourly,daily,alerts,flags]&units=si';
+  
+  console.log(url);
 
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
@@ -59,7 +83,7 @@ Pebble.sendAppMessage(dictionary,
 );
     }      
   );
-}
+};
 
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
@@ -67,7 +91,7 @@ Pebble.addEventListener('ready',
     console.log('PebbleKit JS ready!');
 
     // Get the initial weather
-    getWeather();
+    getLocation();
   }
 );
 
