@@ -21,7 +21,7 @@ function getLocation(){
         this.getRealWeather.bind(this),
         this._onLocationError.bind(this), {
           timeout: 15000,
-          maximumAge: 60000
+          maximumAge: Infinity
       });
 }
 
