@@ -18,7 +18,7 @@ var xhrRequest = function (url, type, callback) {
 
 function getWeather() {
    // Construct URL
-  var url = 'http://api.openweathermap.org/data/2.5/weather?id=3046526&appid=a7973e71a5d0f3ba5d1af51e374f01bc';
+  var url = 'http://api.openweathermap.org/data/2.5/weather?id={API_KEYS}';
 
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
